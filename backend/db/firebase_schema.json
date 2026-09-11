@@ -1,0 +1,162 @@
+{
+  "customers": {
+    "CUST_001": {
+      "customer_id": "CUST_001",
+      "name": "Sarah Jenkins",
+      "mobile": "+91-9876543210",
+      "email": "policyholder@secureclaim.ai",
+      "address": "42 Residency Road, Indiranagar, Bengaluru, KA 560038",
+      "date_of_birth": "1992-05-14",
+      "created_at": "2026-01-10T10:00:00Z"
+    }
+  },
+  "vehicles": {
+    "VEH_001": {
+      "vehicle_id": "VEH_001",
+      "customer_id": "CUST_001",
+      "vehicle_type": "Car",
+      "registration_number": "KA-01-MJ-8821",
+      "manufacturer": "Hyundai",
+      "model": "i20",
+      "variant": "Asta 1.2 MT",
+      "manufacturing_year": 2023,
+      "registration_date": "2023-04-12",
+      "fuel_type": "Petrol",
+      "engine_capacity": "1197 cc",
+      "vin_masked": "MALAB51CLPM****21",
+      "created_at": "2026-01-10T10:15:00Z"
+    }
+  },
+  "vehicle_images": {
+    "VIMG_001": {
+      "image_id": "VIMG_001",
+      "vehicle_id": "VEH_001",
+      "image_type": "FRONT_BASELINE",
+      "image_path": "/uploads/vehicles/veh_001_front.jpg",
+      "uploaded_at": "2026-01-10T10:20:00Z"
+    },
+    "VIMG_002": {
+      "image_id": "VIMG_002",
+      "vehicle_id": "VEH_001",
+      "image_type": "ODOMETER",
+      "image_path": "/uploads/vehicles/veh_001_odometer.jpg",
+      "uploaded_at": "2026-01-10T10:20:00Z"
+    }
+  },
+  "insurance_policies": {
+    "POL_001": {
+      "policy_id": "POL_001",
+      "vehicle_id": "VEH_001",
+      "policy_number": "POL-2026-0042",
+      "policy_type": "Comprehensive Zero-Dep",
+      "start_date": "2026-01-01",
+      "expiry_date": "2026-12-31",
+      "idv": 685000.00,
+      "premium_amount": 18500.00,
+      "coverage": "Own Damage + Third Party Liability + Zero Depreciation",
+      "addons": "Engine Protection, Return to Invoice, Roadside Assistance",
+      "status": "ACTIVE",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  "payments": {
+    "PAY_001": {
+      "payment_id": "PAY_001",
+      "policy_id": "POL_001",
+      "amount": 18500.00,
+      "payment_method": "UPI",
+      "transaction_id": "TXN_UPI_20260101_77492",
+      "payment_date": "2026-01-01T08:30:15Z",
+      "payment_status": "COMPLETED"
+    }
+  },
+  "claims": {
+    "CLM_001": {
+      "claim_id": "CLM_001",
+      "policy_id": "POL_001",
+      "accident_date": "2026-09-08",
+      "accident_time": "14:30:00",
+      "accident_location": "Indiranagar 100ft Road, Bengaluru",
+      "accident_description": "Brushed against an underground parking pillar while reversing, causing dent and scratches on front bumper.",
+      "claimed_amount": 12500.00,
+      "claim_status": "UNDER_REVIEW",
+      "created_at": "2026-09-08T15:45:00Z"
+    }
+  },
+  "claim_images": {
+    "CIMG_001": {
+      "claim_image_id": "CIMG_001",
+      "claim_id": "CLM_001",
+      "image_path": "/uploads/claims/clm_001_damage_front.jpg",
+      "image_type": "ACCIDENT_FRONT",
+      "uploaded_at": "2026-09-08T15:46:10Z"
+    }
+  },
+  "claimed_damages": {
+    "CDMG_001": {
+      "claimed_damage_id": "CDMG_001",
+      "claim_id": "CLM_001",
+      "vehicle_part": "Front Bumper",
+      "customer_description": "Deep dent on right bumper corner and surface scratches."
+    }
+  },
+  "ai_assessments": {
+    "ASM_001": {
+      "assessment_id": "ASM_001",
+      "claim_id": "CLM_001",
+      "model_version": "v2.0-YOLO-Vision",
+      "severity": "Moderate",
+      "repair_cost_category": "₹8,000 - ₹18,000",
+      "consistency_score": 94.50,
+      "processing_status": "COMPLETED",
+      "created_at": "2026-09-08T15:48:20Z"
+    }
+  },
+  "ai_detected_damages": {
+    "DET_001": {
+      "detection_id": "DET_001",
+      "assessment_id": "ASM_001",
+      "claim_image_id": "CIMG_001",
+      "vehicle_part": "Front Bumper",
+      "damage_type": "Dent & Scratch",
+      "severity": "Moderate",
+      "confidence_score": 93.80,
+      "cost_category": "Repairable",
+      "bounding_box": {
+        "x": 124,
+        "y": 248,
+        "width": 195,
+        "height": 110
+      }
+    }
+  },
+  "claim_verifications": {
+    "VRF_001": {
+      "verification_id": "VRF_001",
+      "claim_id": "CLM_001",
+      "claimed_part": "Front Bumper",
+      "ai_detected": true,
+      "match_status": "MATCH",
+      "remarks": "AI detection confirmed damage on Front Bumper consistent with claimant report."
+    }
+  },
+  "officers": {
+    "OFF_001": {
+      "officer_id": "OFF_001",
+      "name": "Chief Claims Officer",
+      "email": "admin@secureclaim.ai",
+      "role": "SURVEYOR",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  "claim_reviews": {
+    "REV_001": {
+      "review_id": "REV_001",
+      "claim_id": "CLM_001",
+      "officer_id": "OFF_001",
+      "decision": "APPROVED",
+      "remarks": "Claim verified with AI inspection and pre-accident baseline. Approved for workshop claim settlement.",
+      "reviewed_at": "2026-09-09T10:15:00Z"
+    }
+  }
+}

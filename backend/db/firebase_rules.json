@@ -1,0 +1,66 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    
+    "customers": {
+      ".indexOn": ["email", "mobile"]
+    },
+    
+    "vehicles": {
+      ".indexOn": ["customer_id", "registration_number"]
+    },
+    
+    "vehicle_images": {
+      ".indexOn": ["vehicle_id"]
+    },
+    
+    "insurance_policies": {
+      ".indexOn": ["vehicle_id", "policy_number", "status"]
+    },
+    
+    "payments": {
+      ".indexOn": ["policy_id", "transaction_id", "payment_status"]
+    },
+    
+    "claims": {
+      ".indexOn": ["policy_id", "claim_status", "accident_date"]
+    },
+    
+    "claim_images": {
+      ".indexOn": ["claim_id"]
+    },
+    
+    "claimed_damages": {
+      ".indexOn": ["claim_id", "vehicle_part"]
+    },
+    
+    "ai_assessments": {
+      ".indexOn": ["claim_id", "processing_status"]
+    },
+    
+    "ai_detected_damages": {
+      ".indexOn": ["assessment_id", "claim_image_id", "vehicle_part"]
+    },
+    
+    "claim_verifications": {
+      ".indexOn": ["claim_id", "match_status"]
+    },
+    
+    "officers": {
+      ".indexOn": ["email", "role"]
+    },
+    
+    "claim_reviews": {
+      ".indexOn": ["claim_id", "officer_id", "decision"]
+    },
+    
+    "users": {
+      ".indexOn": ["email", "role"]
+    },
+    
+    "activities": {
+      ".indexOn": ["timestamp", "type"]
+    }
+  }
+}
