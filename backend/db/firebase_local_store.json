@@ -63,7 +63,201 @@
       "payment_status": "COMPLETED"
     }
   },
-  "claims": {},
+  "claims": {
+    "1": {
+      "claim_number": "CLM-2026-AF0DFEF6",
+      "user_id": 4,
+      "vehicle_model": "Hyundai i20 Asta",
+      "vehicle_plate": "TN-01-MJ-8821",
+      "claimed_part": "Front Bumper",
+      "claimed_description": "Brushed against a parking garage pillar while parallel parking, causing a dent and scratches on the front bumper.",
+      "claimed_severity": "Minor",
+      "status": "Pending",
+      "verdict": "Partial Match",
+      "match_score": 49.2,
+      "match_summary": "Partial consistency detected (49% match). Detected damages partially overlap with claimed description, but discrepancies exist in severity or secondary parts. Desk review recommended.",
+      "estimated_cost_min": 48000.0,
+      "estimated_cost_max": 119000.0,
+      "admin_note": null,
+      "images": [
+        {
+          "id": 1,
+          "claim_id": 1,
+          "original": "/uploads/dcc9cc11e5014fe3ad8cf9e3fb093c4c.jpg",
+          "overlay": "/uploads/overlay_dcc9cc11e5014fe3ad8cf9e3fb093c4c.jpg",
+          "orig_abs": "C:\\Users\\Admin\\project\\PROJECT-FINAL\\backend\\uploads\\dcc9cc11e5014fe3ad8cf9e3fb093c4c.jpg",
+          "overlay_abs": "C:\\Users\\Admin\\project\\PROJECT-FINAL\\backend\\uploads\\overlay_dcc9cc11e5014fe3ad8cf9e3fb093c4c.jpg",
+          "image_path": "/uploads/dcc9cc11e5014fe3ad8cf9e3fb093c4c.jpg",
+          "overlay_image_path": "/uploads/overlay_dcc9cc11e5014fe3ad8cf9e3fb093c4c.jpg",
+          "file_name": "download (4).jpg"
+        },
+        {
+          "id": 2,
+          "claim_id": 1,
+          "original": "/uploads/d5a2269f518844a6b27c61896002b3af.jpeg",
+          "overlay": "/uploads/overlay_d5a2269f518844a6b27c61896002b3af.jpeg",
+          "orig_abs": "C:\\Users\\Admin\\project\\PROJECT-FINAL\\backend\\uploads\\d5a2269f518844a6b27c61896002b3af.jpeg",
+          "overlay_abs": "C:\\Users\\Admin\\project\\PROJECT-FINAL\\backend\\uploads\\overlay_d5a2269f518844a6b27c61896002b3af.jpeg",
+          "image_path": "/uploads/d5a2269f518844a6b27c61896002b3af.jpeg",
+          "overlay_image_path": "/uploads/overlay_d5a2269f518844a6b27c61896002b3af.jpeg",
+          "file_name": "damaged-silver-car.jpeg"
+        }
+      ],
+      "detections": [
+        {
+          "id": 1,
+          "claim_id": 1,
+          "part": "Front Bumper",
+          "damage_type": "Dent",
+          "severity": "Severe",
+          "confidence": 0.936,
+          "cost_min": 22000.0,
+          "cost_max": 45000.0,
+          "bbox_json": "[32, 81, 78, 106]",
+          "mask_json": "[[46, 101], [44, 100], [39, 100], [40, 95], [39, 92], [50, 84], [58, 82]]"
+        },
+        {
+          "id": 2,
+          "claim_id": 1,
+          "part": "Front Left Fender",
+          "damage_type": "Dent",
+          "severity": "Minor",
+          "confidence": 0.828,
+          "cost_min": 2500.0,
+          "cost_max": 6000.0,
+          "bbox_json": "[28, 73, 83, 111]",
+          "mask_json": "[[70, 100], [73, 102], [60, 105], [36, 95], [36, 92], [60, 77], [69, 82], [75, 84], [75, 90]]"
+        },
+        {
+          "id": 3,
+          "claim_id": 1,
+          "part": "Headlight",
+          "damage_type": "Crack",
+          "severity": "Moderate",
+          "confidence": 0.842,
+          "cost_min": 6000.0,
+          "cost_max": 15000.0,
+          "bbox_json": "[52, 50, 105, 82]",
+          "mask_json": "[[64, 70], [64, 59], [60, 56], [95, 55], [93, 57], [96, 61], [98, 62]]"
+        },
+        {
+          "id": 4,
+          "claim_id": 1,
+          "part": "Front Bumper",
+          "damage_type": "Dent",
+          "severity": "Minor",
+          "confidence": 0.924,
+          "cost_min": 2500.0,
+          "cost_max": 6000.0,
+          "bbox_json": "[329, 374, 639, 525]",
+          "mask_json": "[[626, 452], [595, 478], [568, 481], [478, 516], [448, 503], [561, 406], [573, 415]]"
+        },
+        {
+          "id": 5,
+          "claim_id": 1,
+          "part": "Front Right Fender",
+          "damage_type": "Mirror Damage",
+          "severity": "Minor",
+          "confidence": 0.827,
+          "cost_min": 3000.0,
+          "cost_max": 12000.0,
+          "bbox_json": "[269, 378, 466, 526]",
+          "mask_json": "[[415, 507], [338, 392], [392, 410], [423, 403], [428, 421], [450, 449]]"
+        },
+        {
+          "id": 6,
+          "claim_id": 1,
+          "part": "Rear Bumper",
+          "damage_type": "Panel Deformation",
+          "severity": "Moderate",
+          "confidence": 0.952,
+          "cost_min": 12000.0,
+          "cost_max": 35000.0,
+          "bbox_json": "[309, 395, 580, 568]",
+          "mask_json": "[[555, 517], [503, 523], [505, 543], [332, 458], [368, 436], [465, 415], [555, 466]]"
+        }
+      ],
+      "reports": [
+        {
+          "id": 1,
+          "claim_id": 1,
+          "pdf_path": "/reports/Report_CLM-2026-AF0DFEF6_1789450774.pdf",
+          "file_name": "Report_CLM-2026-AF0DFEF6_1789450774.pdf",
+          "generated_at": "2026-09-15T11:09:34.964576"
+        }
+      ],
+      "id": 1,
+      "created_at": "2026-09-15T11:09:34.914333",
+      "updated_at": "2026-09-15T11:09:34.964602"
+    },
+    "2": {
+      "claim_number": "CLM-2026-14D10B1B",
+      "user_id": 2,
+      "vehicle_model": "Hyundai i20 Asta",
+      "vehicle_plate": "TN-01-MJ-8821",
+      "claimed_part": "Front Left Door",
+      "claimed_description": "Brushed against a parking garage pillar while parallel parking, causing a dent and scratches on the front bumper.",
+      "claimed_severity": "Severe",
+      "status": "Pending",
+      "verdict": "Partial Match",
+      "match_score": 50.0,
+      "match_summary": "Partial consistency detected (50% match). Detected damages partially overlap with claimed description, but discrepancies exist in severity or secondary parts. Desk review recommended.",
+      "estimated_cost_min": 11000.0,
+      "estimated_cost_max": 30000.0,
+      "admin_note": null,
+      "images": [
+        {
+          "id": 1,
+          "claim_id": 2,
+          "original": "/uploads/fb11302447104b0eaf5dfa0a0524c5c8.jpeg",
+          "overlay": "/uploads/overlay_fb11302447104b0eaf5dfa0a0524c5c8.jpeg",
+          "orig_abs": "C:\\Users\\Admin\\project\\PROJECT-FINAL\\backend\\uploads\\fb11302447104b0eaf5dfa0a0524c5c8.jpeg",
+          "overlay_abs": "C:\\Users\\Admin\\project\\PROJECT-FINAL\\backend\\uploads\\overlay_fb11302447104b0eaf5dfa0a0524c5c8.jpeg",
+          "image_path": "/uploads/fb11302447104b0eaf5dfa0a0524c5c8.jpeg",
+          "overlay_image_path": "/uploads/overlay_fb11302447104b0eaf5dfa0a0524c5c8.jpeg",
+          "file_name": "damaged-silver-car.jpeg"
+        }
+      ],
+      "detections": [
+        {
+          "id": 1,
+          "claim_id": 2,
+          "part": "Front Bumper",
+          "damage_type": "Dent",
+          "severity": "Moderate",
+          "confidence": 0.918,
+          "cost_min": 8000.0,
+          "cost_max": 18000.0,
+          "bbox_json": "[268, 271, 541, 450]",
+          "mask_json": "[[350, 424], [346, 404], [316, 402], [321, 390], [310, 389], [293, 387], [308, 351], [416, 301], [520, 345]]"
+        },
+        {
+          "id": 2,
+          "claim_id": 2,
+          "part": "Windshield",
+          "damage_type": "Bumper Damage",
+          "severity": "Minor",
+          "confidence": 0.926,
+          "cost_min": 3000.0,
+          "cost_max": 12000.0,
+          "bbox_json": "[278, 146, 494, 328]",
+          "mask_json": "[[466, 281], [359, 287], [344, 296], [322, 204], [386, 176], [469, 190], [475, 221], [485, 221]]"
+        }
+      ],
+      "reports": [
+        {
+          "id": 1,
+          "claim_id": 2,
+          "pdf_path": "/reports/Report_CLM-2026-14D10B1B_1789600428.pdf",
+          "file_name": "Report_CLM-2026-14D10B1B_1789600428.pdf",
+          "generated_at": "2026-09-17T04:43:48.804755"
+        }
+      ],
+      "id": 2,
+      "created_at": "2026-09-17T04:43:48.650019",
+      "updated_at": "2026-09-17T04:43:48.804773"
+    }
+  },
   "claim_images": {
     "CIMG_001": {
       "claim_image_id": "CIMG_001",
@@ -185,6 +379,24 @@
       "is_active": true,
       "id": 5,
       "created_at": "2026-09-10T10:09:25.263085"
+    },
+    "11AhPIQrA9Zmm9Lq3ogTgMPM6KX2": {
+      "created_at": "2026-09-15T04:49:32.363Z",
+      "email": "kishoreg260235@gmail.com",
+      "id": "11AhPIQrA9Zmm9Lq3ogTgMPM6KX2",
+      "is_active": true,
+      "name": "kishore",
+      "role": "officer",
+      "uid": "11AhPIQrA9Zmm9Lq3ogTgMPM6KX2"
+    },
+    "W81hRsOS8XXiuGhEKziKpNyPObI2": {
+      "created_at": "2026-09-15T04:43:28.046Z",
+      "email": "kishoreg26055@gmail.com",
+      "id": "W81hRsOS8XXiuGhEKziKpNyPObI2",
+      "is_active": true,
+      "name": "kishore",
+      "role": "officer",
+      "uid": "W81hRsOS8XXiuGhEKziKpNyPObI2"
     }
   },
   "cost_configs": {
@@ -330,8 +542,46 @@
       "end_date": "2026-12-31T23:59:59",
       "status": "Active",
       "created_at": "2026-09-09T10:39:13.957401"
+    },
+    "xtwzLvEpfjSe0Rj76kEO0XkFA1d2": {
+      "annual_premium": 7500,
+      "chassis_number": "MALC251CL094821",
+      "coverage_amount": "\u20b9 4,00,000",
+      "coverage_type": "Third-Party & Collision Essential",
+      "end_date": "2027-09-15T10:35:05.872Z",
+      "id": "POL_1789468505872",
+      "monthly_instalment": 690,
+      "policy_number": "POL-2026-3019",
+      "purchased_at": "2026-09-15T10:35:05.872Z",
+      "start_date": "2026-09-15T10:35:05.872Z",
+      "status": "Active",
+      "user_email": "kishoreg2605@gmail.com",
+      "user_id": "xtwzLvEpfjSe0Rj76kEO0XkFA1d2",
+      "user_name": "KISHORE",
+      "validity_days": 365,
+      "vehicle_model": "Hyundai i20 Asta",
+      "vehicle_plate": "TN-01-MJ-8821",
+      "vehicle_type": "EV",
+      "vehicle_year": "2024"
     }
   },
   "premium_configs": {},
-  "activities": {}
+  "activities": {
+    "ACT_1789450774_3e6c": {
+      "claim_id": 1,
+      "description": "Part: Front Bumper, Severity: Minor",
+      "id": "ACT_1789450774_3e6c",
+      "timestamp": "2026-09-15T11:09:34.916246",
+      "title": "New Claim #CLM-2026-AF0DFEF6 Filed",
+      "type": "new_claim"
+    },
+    "ACT_1789600428_918d": {
+      "claim_id": 2,
+      "description": "Part: Front Left Door, Severity: Severe",
+      "id": "ACT_1789600428_918d",
+      "timestamp": "2026-09-17T04:43:48.652329",
+      "title": "New Claim #CLM-2026-14D10B1B Filed",
+      "type": "new_claim"
+    }
+  }
 }

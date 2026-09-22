@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate, Link } from 'react-router-dom';
-import { Shield, LogOut, Menu, X, UserCheck, ShieldCheck } from 'lucide-react';
+import { NavLink, useNavigate, Link, useLocation } from 'react-router-dom';
+import {
+  Shield, LogOut, Menu, X, UserCheck, ShieldCheck,
+  LayoutDashboard, FilePlus, History, FileText,
+  Users, Settings, AlertTriangle, Bell, ChevronDown,
+  Car, ClipboardList, BarChart3, BookOpen, Home,
+  Sliders, Search, ChevronRight
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import RealtimeStatusBadge from './RealtimeStatusBadge';
 
 export default function Layout({ children, navItems, title }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const isAdmin = user?.role === 'admin';
@@ -16,135 +23,153 @@ export default function Layout({ children, navItems, title }) {
     navigate('/');
   };
 
+  const initials = user?.name
+    ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+    : 'U';
+
   return (
-    <div className="min-h-screen flex bg-slate-950 text-slate-100 antialiased font-sans">
+    <div className="min-h-screen flex bg-[#F7FAFD] text-[#0D1B2E] font-sans">
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* ─── Sidebar ─── */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-slate-900/95 border-r border-slate-800 flex flex-col justify-between transform transition-transform duration-200 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-[#E5E7EB] flex flex-col transform transition-transform duration-200 ease-in-out shadow-lg lg:shadow-none ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div>
-          {/* Logo Header */}
-          <div className="p-6 border-b border-slate-800/80">
-            <Link to={isAdmin ? '/admin' : '/dashboard'} className="flex items-center gap-3 group">
-              <div className="p-2 bg-gradient-to-tr from-primary-600 to-blue-500 rounded-xl shadow-md shadow-primary-500/20 group-hover:scale-105 transition-transform">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="font-bold text-base tracking-tight text-white leading-tight">
-                  SecureClaim <span className="text-primary-400">AI</span>
-                </h1>
-                <p className="text-[11px] text-slate-400 font-medium">
-                  {isAdmin ? 'Insurance Officer Console' : 'Policyholder Portal'}
-                </p>
-              </div>
-            </Link>
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="p-4 space-y-1.5">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                onClick={() => setSidebarOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                    isActive
-                      ? 'bg-gradient-to-r from-primary-600 to-blue-600 text-white shadow-lg shadow-primary-600/20 font-bold'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-                  }`
-                }
-              >
-                <item.icon className="w-4 h-4 shrink-0" />
-                <span>{item.label}</span>
-              </NavLink>
-            ))}
-          </nav>
+        {/* Logo */}
+        <div className="px-5 py-4 border-b border-[#E5E7EB]">
+          <Link
+            to={isAdmin ? '/admin' : '/dashboard'}
+            className="flex items-center gap-3 group"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <div className="w-9 h-9 rounded-xl bg-[#06244F] flex items-center justify-center shadow-sm group-hover:bg-[#082B5C] transition-colors flex-shrink-0">
+              <Shield className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="font-black text-[15px] tracking-tight text-[#06244F] leading-tight">
+                AutoSure
+              </h1>
+              <p className="text-[10px] text-[#6B7280] font-medium leading-tight">
+                {isAdmin ? 'Officer Console' : 'Policyholder Portal'}
+              </p>
+            </div>
+          </Link>
         </div>
 
-        {/* User Card & Logout */}
-        <div className="p-4 border-t border-slate-800/80 bg-slate-950/40">
-          <div className="mb-3 flex justify-center">
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              onClick={() => setSidebarOpen(false)}
+              className={({ isActive }) =>
+                isActive
+                  ? 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold bg-[#06244F] text-white'
+                  : 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#6B7280] hover:text-[#06244F] hover:bg-[#EAF4FF] transition-all duration-150'
+              }
+            >
+              <item.icon className="w-4 h-4 shrink-0" />
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* User section */}
+        <div className="p-4 border-t border-[#E5E7EB] space-y-3">
+          <div className="mb-2">
             <RealtimeStatusBadge />
           </div>
-          <div className="p-3 bg-slate-800/60 border border-slate-700/60 rounded-xl mb-3 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-primary-600/20 text-primary-400 flex items-center justify-center font-bold text-sm shrink-0 border border-primary-500/30">
-              {user?.name ? user.name[0].toUpperCase() : 'U'}
+
+          <div className="flex items-center gap-3 p-3 bg-[#F7FAFD] rounded-xl border border-[#E5E7EB]">
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm text-white flex-shrink-0 ${isAdmin ? 'bg-amber-500' : 'bg-[#1268E8]'}`}>
+              {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs font-bold text-white truncate">{user?.name || 'Authorized User'}</p>
-              </div>
-              <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
-              <div className="mt-1">
-                <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide ${
-                    isAdmin
-                      ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                      : 'bg-primary-500/15 text-primary-400 border border-primary-500/30'
-                  }`}
-                >
-                  {isAdmin ? <ShieldCheck className="w-3 h-3" /> : <UserCheck className="w-3 h-3" />}
-                  {isAdmin ? 'Claims Officer' : 'Policyholder'}
-                </span>
-              </div>
+              <p className="text-xs font-bold text-[#06244F] truncate">{user?.name || 'User'}</p>
+              <p className="text-[11px] text-[#6B7280] truncate">{user?.email}</p>
+              <span className={`inline-flex items-center gap-1 mt-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                isAdmin
+                  ? 'bg-amber-50 text-amber-700'
+                  : 'bg-[#EAF4FF] text-[#1268E8]'
+              }`}>
+                {isAdmin ? <ShieldCheck className="w-3 h-3" /> : <UserCheck className="w-3 h-3" />}
+                {isAdmin ? 'Claims Officer' : 'Policyholder'}
+              </span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={handleLogout}
-            className="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-colors"
+            className="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-semibold text-[#6B7280] hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-3.5 h-3.5" />
             Sign Out
           </button>
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-slate-950">
-        {/* Mobile Header Bar */}
-        <header className="lg:hidden bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+      {/* ─── Main Content ─── */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Mobile header */}
+        <header className="lg:hidden bg-white border-b border-[#E5E7EB] px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white"
+            className="p-2 rounded-xl bg-[#F7FAFD] text-[#374151] hover:bg-[#EAF4FF] border border-[#E5E7EB]"
           >
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-primary-400" />
-            <span className="font-bold text-sm text-white">SecureClaim AI</span>
+            <div className="w-7 h-7 rounded-lg bg-[#06244F] flex items-center justify-center">
+              <Shield className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-bold text-sm text-[#06244F]">AutoSure</span>
           </div>
           <div className="flex items-center gap-2">
-            <RealtimeStatusBadge />
+            <RealtimeStatusBadge compact />
             <button
               type="button"
               onClick={handleLogout}
-              className="p-2 text-slate-400 hover:text-rose-400"
+              className="p-2 text-[#6B7280] hover:text-red-500"
             >
               <LogOut className="w-4 h-4" />
             </button>
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl w-full mx-auto">
-          {children}
+        {/* Desktop top bar */}
+        <div className="hidden lg:flex items-center justify-between bg-white border-b border-[#E5E7EB] px-6 py-3">
+          <div className="flex items-center gap-2 text-sm text-[#6B7280]">
+            <Link to="/" className="hover:text-[#1268E8] transition-colors">Home</Link>
+            <ChevronRight className="w-3.5 h-3.5" />
+            <span className="font-semibold text-[#06244F]">{title || 'Dashboard'}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <RealtimeStatusBadge />
+            <Link to="/" className="text-xs text-[#6B7280] hover:text-[#1268E8] flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[#EAF4FF] transition-all">
+              <Home className="w-3.5 h-3.5" /> Home
+            </Link>
+          </div>
+        </div>
+
+        {/* Page content */}
+        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
         </main>
       </div>
     </div>
   );
 }
-

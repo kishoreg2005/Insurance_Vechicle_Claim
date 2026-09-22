@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import OfficerRegisterPage from './pages/OfficerRegisterPage';
 import PolicyPurchase from './pages/user/PolicyPurchase';
 import UserDashboard from './pages/user/UserDashboard';
 import NewClaim from './pages/user/NewClaim';
@@ -20,8 +21,8 @@ function PublicRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary-600 border-t-transparent" />
+      <div className="min-h-screen flex items-center justify-center bg-[#F7FAFD]">
+        <div className="animate-spin rounded-full h-8 w-8" style={{ borderWidth: '3px', borderStyle: 'solid', borderColor: '#EAF4FF', borderTopColor: '#1268E8' }} />
       </div>
     );
   }
@@ -39,9 +40,16 @@ export default function App() {
           position="top-right"
           toastOptions={{
             duration: 4000,
-            style: { borderRadius: '10px', background: '#1e293b', color: '#fff' },
-            success: { iconTheme: { primary: '#10b981', secondary: '#fff' } },
-            error: { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
+            style: {
+              borderRadius: '8px',
+              background: '#ffffff',
+              color: '#0D1B2E',
+              border: '1px solid #E5E7EB',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+              fontSize: '13px',
+            },
+            success: { iconTheme: { primary: '#059669', secondary: '#fff' } },
+            error: { iconTheme: { primary: '#DC2626', secondary: '#fff' } },
           }}
         />
         <Routes>
@@ -49,6 +57,7 @@ export default function App() {
           <Route path="/login/user" element={<PublicRoute><LoginPage role="user" /></PublicRoute>} />
           <Route path="/login/admin" element={<PublicRoute><LoginPage role="admin" /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+          <Route path="/register/officer" element={<PublicRoute><OfficerRegisterPage /></PublicRoute>} />
 
           <Route path="/dashboard" element={<ProtectedRoute role="user"><UserDashboard /></ProtectedRoute>} />
           <Route path="/policy/purchase" element={<ProtectedRoute role="user"><PolicyPurchase /></ProtectedRoute>} />

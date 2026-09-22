@@ -1,35 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  ClipboardList,
-  Sliders,
-  Users,
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  XCircle,
-  TrendingUp,
-  FileText,
-  ShieldAlert,
-  ArrowRight,
-  Sparkles,
-  DollarSign,
-  Activity
+  LayoutDashboard, ClipboardList, Sliders, Users,
+  AlertTriangle, CheckCircle2, Clock, XCircle,
+  TrendingUp, FileText, ShieldAlert, ArrowRight,
+  Sparkles, Activity, BarChart3, Zap
 } from 'lucide-react';
 import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend
+  ResponsiveContainer, AreaChart, Area, BarChart, Bar,
+  PieChart, Pie, Cell, XAxis, YAxis, Tooltip, Legend
 } from 'recharts';
 import Layout from '../../components/Layout';
 import StatusBadge, { VerdictBadge, CostBadge } from '../../components/StatusBadge';
@@ -43,28 +22,32 @@ const navItems = [
   { to: '/admin/users', label: 'Policyholders', icon: Users },
 ];
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+const COLORS = ['#1268E8', '#059669', '#D97706', '#DC2626', '#7C3AED', '#EC4899'];
 
-function StatCard({ icon: Icon, label, value, subtext, color, borderColor, highlight }) {
+function StatCard({ icon: Icon, label, value, sub, color, bg, alert }) {
   return (
-    <div
-      className={`bg-slate-900/90 border ${
-        highlight ? 'border-rose-500/50 shadow-lg shadow-rose-500/10' : borderColor || 'border-slate-800'
-      } rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-slate-700 transition-all`}
-    >
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</p>
-          <p className="text-3xl font-extrabold text-white mt-1 tracking-tight">{value}</p>
-          {subtext && <p className="text-xs text-slate-400 mt-1">{subtext}</p>}
+    <div className={`stat-card ${alert ? 'border-red-300 bg-red-50' : ''}`}>
+      <div className="flex items-center gap-3">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: bg }}>
+          <Icon className="w-5 h-5" style={{ color }} />
         </div>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} shadow-inner`}>
-          <Icon className="w-6 h-6" />
+        <div className="min-w-0">
+          <p className="text-xs text-[#6B7280] font-medium uppercase tracking-wide truncate">{label}</p>
+          <p className={`text-2xl font-black mt-0.5 ${alert ? 'text-red-600' : 'text-[#06244F]'}`}>{value}</p>
+          {sub && <p className="text-[11px] text-[#9CA3AF] truncate">{sub}</p>}
         </div>
       </div>
     </div>
   );
 }
+
+const tooltipStyle = {
+  backgroundColor: '#fff',
+  border: '1px solid #E5E7EB',
+  borderRadius: '8px',
+  fontSize: '12px',
+  color: '#374151',
+};
 
 export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState(null);
@@ -84,297 +67,208 @@ export default function AdminDashboard() {
       .catch((err) => console.error('Failed to load admin analytics:', err))
       .finally(() => setLoading(false));
 
-    // Listen to Firebase RTDB live activities
     const unsubActivities = subscribeToLiveActivities((activities) => {
       setLiveActivities(activities);
     });
-
     return () => unsubActivities();
   }, []);
 
   if (loading) {
     return (
-      <Layout navItems={navItems} title="Insurance Officer Console">
-        <div className="flex flex-col items-center justify-center py-28 gap-4">
-          <div className="w-10 h-10 border-4 border-primary-500/30 border-t-primary-500 rounded-full animate-spin" />
-          <p className="text-sm text-slate-400">Loading claims analytics & telemetry...</p>
+      <Layout navItems={navItems} title="Officer Console">
+        <div className="flex flex-col items-center justify-center py-28 gap-3">
+          <div className="w-8 h-8 rounded-full animate-spin" style={{ borderWidth: '3px', borderStyle: 'solid', borderColor: '#EAF4FF', borderTopColor: '#1268E8' }} />
+          <p className="text-sm text-[#6B7280]">Loading claims analytics...</p>
         </div>
       </Layout>
     );
   }
 
   const kpis = analytics?.kpis || {};
-  const timelineData = analytics?.claims_timeline || [];
-  const statusData = (analytics?.claims_by_status || []).map((s) => ({
-    name: s.status,
-    value: s.count,
-    color: s.color,
+  const timelineData = analytics?.timeline || analytics?.claims_timeline || [];
+  const statusData = (analytics?.status_distribution || analytics?.claims_by_status || []).map((s) => ({
+    name: s.status, value: s.count, color: s.color,
   }));
   const damageTypeData = analytics?.damage_type_distribution || [];
   const costBracketData = analytics?.cost_bracket_distribution || [];
   const recentFlagged = analytics?.recent_flagged_claims || [];
 
   return (
-    <Layout navItems={navItems} title="Insurance Officer Console">
-      <div className="space-y-8">
-        {/* Welcome Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-500/15 border border-primary-500/30 text-primary-300 text-xs font-semibold mb-2">
-              <Sparkles className="w-3.5 h-3.5" /> AI Neural Verification Engine Operational
-            </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-              Insurance Officer Command Console
-            </h1>
-            <p className="text-slate-400 text-xs mt-1">
-              Review AI damage assessments, resolve cross-check discrepancies, and manage claims pipeline
-            </p>
-          </div>
+    <Layout navItems={navItems} title="Officer Console">
+      <div className="space-y-6 fade-in">
 
+        {/* Header */}
+        <div className="page-banner flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-[#93C5FD] mb-3">
+              <Zap className="w-3.5 h-3.5" /> AI Verification Engine · Operational
+            </div>
+            <h1 className="text-2xl font-black text-white">Insurance Officer Console</h1>
+            <p className="text-[#BAD4F9] text-sm mt-1">Review AI damage assessments, resolve discrepancies, and manage the claims pipeline</p>
+          </div>
           <div className="flex items-center gap-3">
-            <Link
-              to="/admin/claims?verdict=Flagged"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 font-semibold text-xs transition-all shadow-sm shadow-rose-500/10"
-            >
-              <ShieldAlert className="w-4 h-4 text-rose-400" />
-              <span>Review {kpis.flagged_count || 0} Flagged Claims</span>
+            <Link to="/admin/claims?verdict=Flagged" className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 border border-red-400/40 text-red-200 font-semibold text-sm transition-all flex-shrink-0">
+              <ShieldAlert className="w-4 h-4 text-red-300" />
+              {kpis.flagged_count || 0} Flagged
+            </Link>
+            <Link to="/admin/claims" className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold text-sm transition-all flex-shrink-0">
+              <ClipboardList className="w-4 h-4 text-[#93C5FD]" /> All Claims
             </Link>
           </div>
         </div>
 
-        {/* Firebase Realtime Activity Stream */}
+        {/* Live Activity Banner */}
         {liveActivities.length > 0 && (
-          <div className="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-4 shadow-lg flex items-center justify-between gap-4">
+          <div className="card border-green-200 bg-green-50 flex items-center justify-between gap-3 py-3">
             <div className="flex items-center gap-3">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
+              <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
               </span>
               <div>
-                <p className="text-xs font-bold text-white flex items-center gap-2">
-                  <span>Realtime Activity Stream</span>
-                  <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30 font-semibold">
-                    Firebase RTDB Live
-                  </span>
+                <p className="text-xs font-bold text-green-800 flex items-center gap-2">
+                  Realtime Activity
+                  <span className="text-[10px] bg-green-200 text-green-700 px-2 py-0.5 rounded-full font-semibold">Firebase RTDB Live</span>
                 </p>
-                <p className="text-xs text-slate-300">
-                  {liveActivities[0].message} • <span className="text-slate-500">{new Date(liveActivities[0].timestamp).toLocaleTimeString()}</span>
+                <p className="text-xs text-green-700 mt-0.5">
+                  {liveActivities[0].message} · <span className="text-green-600">{new Date(liveActivities[0].timestamp).toLocaleTimeString()}</span>
                 </p>
               </div>
             </div>
-            <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
-              {liveActivities.length} recent real-time event{liveActivities.length > 1 ? 's' : ''}
-            </span>
+            <span className="text-xs text-green-700 font-mono hidden sm:inline">{liveActivities.length} event{liveActivities.length > 1 ? 's' : ''}</span>
           </div>
         )}
 
-        {/* 6 Key Performance Metric Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
-          <StatCard
-            icon={FileText}
-            label="Total Claims"
-            value={kpis.total_claims || 0}
-            subtext="Incurred to date"
-            color="bg-primary-500/15 text-primary-400"
-            borderColor="border-slate-800"
-          />
-          <StatCard
-            icon={ShieldAlert}
-            label="Flagged / Discrepancy"
-            value={kpis.flagged_count || 0}
-            subtext={`${kpis.flagged_percentage || 0}% mismatch rate`}
-            color="bg-rose-500/15 text-rose-400"
-            highlight={kpis.flagged_count > 0}
-          />
-          <StatCard
-            icon={Clock}
-            label="Pending Review"
-            value={kpis.pending_count || 0}
-            subtext="Requires sign-off"
-            color="bg-amber-500/15 text-amber-400"
-            borderColor="border-amber-500/20"
-          />
-          <StatCard
-            icon={CheckCircle2}
-            label="Approved"
-            value={kpis.approved_count || 0}
-            subtext="Settlement confirmed"
-            color="bg-emerald-500/15 text-emerald-400"
-            borderColor="border-emerald-500/20"
-          />
-          <StatCard
-            icon={TrendingUp}
-            label="Total Liability"
-            value={`$${Math.round(kpis.total_cost_estimated || 0).toLocaleString()}`}
-            subtext="Est. upper repair bound"
-            color="bg-blue-500/15 text-blue-400"
-            borderColor="border-blue-500/20"
-          />
-          <StatCard
-            icon={Activity}
-            label="AI Inference"
-            value={kpis.avg_processing_time || '2.4s'}
-            subtext="Avg segmentation speed"
-            color="bg-purple-500/15 text-purple-400"
-            borderColor="border-purple-500/20"
-          />
+        {/* KPI cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <StatCard icon={FileText} label="Total Claims" value={kpis.total_claims || 0} sub="Incurred to date" color="#1268E8" bg="#EAF4FF" />
+          <StatCard icon={ShieldAlert} label="Flagged" value={kpis.flagged_count || 0} sub={`${Math.round(kpis.potential_fraud_rate ?? 0)}% mismatch`} color="#DC2626" bg="#FEF2F2" alert={kpis.flagged_count > 0} />
+          <StatCard icon={Clock} label="Pending" value={kpis.pending_count || 0} sub="Requires sign-off" color="#D97706" bg="#FFFBEB" />
+          <StatCard icon={CheckCircle2} label="Approved" value={kpis.approved_count || 0} sub="Settlement confirmed" color="#059669" bg="#ECFDF5" />
+          <StatCard icon={TrendingUp} label="Liability" value={`₹${Math.round((kpis.total_estimated_payout ?? 0) / 1000)}K`} sub="Est. upper bound" color="#7C3AED" bg="#F5F3FF" />
+          <StatCard icon={Activity} label="AI Speed" value={kpis.avg_processing_time || '2.4s'} sub="Avg segmentation" color="#6B7280" bg="#F3F4F6" />
         </div>
 
-        {/* Recharts Analytics Section */}
-        <div className="grid lg:grid-cols-12 gap-6">
-          {/* Claims Timeline (30 Days) Area Chart */}
-          <div className="lg:col-span-8 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        {/* Charts */}
+        <div className="grid lg:grid-cols-12 gap-5">
+          {/* Timeline */}
+          <div className="lg:col-span-8 card space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white tracking-tight">Claims Ingestion & Discrepancy Timeline</h3>
-                <p className="text-xs text-slate-400">Daily claim submissions vs flagged discrepancies (Last 30 Days)</p>
+                <h3 className="text-sm font-bold text-[#06244F]">Claims Timeline — Last 30 Days</h3>
+                <p className="text-xs text-[#6B7280]">Daily claim submissions vs flagged discrepancies</p>
               </div>
-              <span className="text-[11px] font-mono px-2 py-1 rounded bg-slate-800 text-slate-300">
-                30-Day Window
-              </span>
+              <span className="text-xs font-mono px-2 py-1 rounded bg-[#F7FAFD] text-[#6B7280] border border-[#E5E7EB]">30-Day</span>
             </div>
-
-            <div className="h-64 w-full">
+            <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={timelineData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
-                    <linearGradient id="colorClaims" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                    <linearGradient id="gClaims" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#1268E8" stopOpacity={0.15} />
+                      <stop offset="95%" stopColor="#1268E8" stopOpacity={0} />
                     </linearGradient>
-                    <linearGradient id="colorFlagged" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                    <linearGradient id="gFlagged" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#DC2626" stopOpacity={0.15} />
+                      <stop offset="95%" stopColor="#DC2626" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickLine={false} />
-                  <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                  />
+                  <XAxis dataKey="date" stroke="#9CA3AF" fontSize={10} tickLine={false} />
+                  <YAxis stroke="#9CA3AF" fontSize={10} tickLine={false} />
+                  <Tooltip contentStyle={tooltipStyle} />
                   <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-                  <Area type="monotone" dataKey="claims" name="Total Incurred" stroke="#3b82f6" fillOpacity={1} fill="url(#colorClaims)" />
-                  <Area type="monotone" dataKey="flagged" name="Flagged Cases" stroke="#ef4444" fillOpacity={1} fill="url(#colorFlagged)" />
+                  <Area type="monotone" dataKey="claims" name="Total Claims" stroke="#1268E8" fillOpacity={1} fill="url(#gClaims)" />
+                  <Area type="monotone" dataKey="flagged" name="Flagged" stroke="#DC2626" fillOpacity={1} fill="url(#gFlagged)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Status Breakdown Donut Chart */}
-          <div className="lg:col-span-4 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          {/* Status Pie */}
+          <div className="lg:col-span-4 card space-y-3">
             <div>
-              <h3 className="text-sm font-bold text-white tracking-tight">Claims Status Distribution</h3>
-              <p className="text-xs text-slate-400">Current workflow breakdown</p>
+              <h3 className="text-sm font-bold text-[#06244F]">Claims Status Distribution</h3>
+              <p className="text-xs text-[#6B7280]">Current workflow breakdown</p>
             </div>
-
-            <div className="h-64 w-full flex items-center justify-center">
+            <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
-                    data={statusData}
-                    innerRadius={55}
-                    outerRadius={80}
-                    paddingAngle={4}
-                    dataKey="value"
-                  >
-                    {statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
+                  <Pie data={statusData} innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value">
+                    {statusData.map((entry, i) => (
+                      <Cell key={`cell-${i}`} fill={entry.color || COLORS[i % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                  />
+                  <Tooltip contentStyle={tooltipStyle} />
                   <Legend wrapperStyle={{ fontSize: '11px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Damage Type Frequency Horizontal Bar */}
-          <div className="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          {/* Damage Types Bar */}
+          <div className="lg:col-span-6 card space-y-3">
             <div>
-              <h3 className="text-sm font-bold text-white tracking-tight">Top Detected Damage Types</h3>
-              <p className="text-xs text-slate-400">Frequency of computer vision classified damage</p>
+              <h3 className="text-sm font-bold text-[#06244F]">Top Detected Damage Types</h3>
+              <p className="text-xs text-[#6B7280]">Frequency of AI-classified damage</p>
             </div>
-
-            <div className="h-56 w-full">
+            <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={damageTypeData} layout="vertical" margin={{ top: 5, right: 20, left: 40, bottom: 5 }}>
-                  <XAxis type="number" stroke="#64748b" fontSize={10} tickLine={false} />
-                  <YAxis type="category" dataKey="damage_type" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                  />
-                  <Bar dataKey="count" name="Occurrences" fill="#3b82f6" radius={[0, 6, 6, 0]} />
+                <BarChart data={damageTypeData} layout="vertical" margin={{ top: 5, right: 20, left: 50, bottom: 5 }}>
+                  <XAxis type="number" stroke="#9CA3AF" fontSize={10} tickLine={false} />
+                  <YAxis type="category" dataKey="damage_type" stroke="#6B7280" fontSize={11} tickLine={false} />
+                  <Tooltip contentStyle={tooltipStyle} />
+                  <Bar dataKey="count" name="Occurrences" fill="#1268E8" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Cost Bracket Frequency */}
-          <div className="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          {/* Cost Brackets */}
+          <div className="lg:col-span-6 card space-y-3">
             <div>
-              <h3 className="text-sm font-bold text-white tracking-tight">Repair Cost Range Stratification</h3>
-              <p className="text-xs text-slate-400">Estimated repair exposure per claim bracket</p>
+              <h3 className="text-sm font-bold text-[#06244F]">Repair Cost Stratification</h3>
+              <p className="text-xs text-[#6B7280]">Claims distribution by repair cost bracket</p>
             </div>
-
-            <div className="h-56 w-full">
+            <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={costBracketData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="bracket" stroke="#64748b" fontSize={10} tickLine={false} />
-                  <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                  />
-                  <Bar dataKey="count" name="Claims in Bracket" fill="#10b981" radius={[6, 6, 0, 0]} />
+                  <XAxis dataKey="bracket" stroke="#9CA3AF" fontSize={10} tickLine={false} />
+                  <YAxis stroke="#9CA3AF" fontSize={10} tickLine={false} />
+                  <Tooltip contentStyle={tooltipStyle} />
+                  <Bar dataKey="count" name="Claims" fill="#059669" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
 
-        {/* Flagged Claims Immediate Attention Card */}
+        {/* Flagged queue */}
         {recentFlagged.length > 0 && (
-          <div className="bg-rose-950/20 border border-rose-500/30 rounded-2xl p-5 shadow-xl space-y-3">
+          <div className="card border-red-200 bg-red-50/50 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <ShieldAlert className="w-5 h-5 text-rose-400" />
-                <h3 className="text-sm font-bold text-white">
-                  High-Priority Discrepancy & Flagged Queue ({recentFlagged.length})
-                </h3>
+                <ShieldAlert className="w-4 h-4 text-red-500" />
+                <h3 className="text-sm font-bold text-red-800">High-Priority Flagged Queue ({recentFlagged.length})</h3>
               </div>
-              <Link
-                to="/admin/claims?verdict=Flagged"
-                className="text-xs font-semibold text-rose-300 hover:text-white flex items-center gap-1"
-              >
-                View All Flagged <ArrowRight className="w-3.5 h-3.5" />
+              <Link to="/admin/claims?verdict=Flagged" className="text-xs font-semibold text-red-600 hover:text-red-800 flex items-center gap-1">
+                View All <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
-
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {recentFlagged.map((c) => (
-                <Link
-                  key={c.id}
-                  to={`/admin/claims/${c.id}`}
-                  className="p-3 bg-slate-900/90 hover:bg-slate-850 border border-rose-500/30 hover:border-rose-400 rounded-xl transition-all group"
-                >
+                <Link key={c.id} to={`/admin/claims/${c.id}`}
+                  className="p-3 bg-white hover:bg-red-50 border border-red-200 hover:border-red-400 rounded-lg transition-all group">
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono text-xs font-bold text-rose-300">{c.claim_number}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 font-bold border border-rose-500/40">
-                      Score: {Math.round(c.match_score || 0)}%
+                    <span className="font-mono text-xs font-bold text-red-600">{c.claim_number}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold border border-red-200">
+                      {Math.round(c.match_score || 0)}% match
                     </span>
                   </div>
-                  <p className="text-xs font-semibold text-white truncate">{c.vehicle_model}</p>
-                  <p className="text-[11px] text-slate-400 truncate mt-0.5">
-                    Claimed: <strong className="text-slate-200">{c.claimed_part}</strong>
-                  </p>
-                  <div className="mt-2 pt-2 border-t border-slate-800 flex items-center justify-between text-[11px]">
-                    <span className="text-emerald-400 font-mono">
-                      ${c.estimated_cost_min?.toLocaleString()} - ${c.estimated_cost_max?.toLocaleString()}
-                    </span>
-                    <span className="text-rose-400 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                      Review <ArrowRight className="w-3 h-3" />
-                    </span>
+                  <p className="text-xs font-semibold text-[#06244F] truncate">{c.vehicle_model}</p>
+                  <p className="text-[11px] text-[#6B7280] truncate mt-0.5">Claimed: <strong className="text-[#374151]">{c.claimed_part}</strong></p>
+                  <div className="mt-2 pt-2 border-t border-red-100 flex items-center justify-between text-[11px]">
+                    <span className="font-mono text-[#374151]">₹{c.estimated_cost_min?.toLocaleString('en-IN')}–₹{c.estimated_cost_max?.toLocaleString('en-IN')}</span>
+                    <span className="text-[#1268E8] font-semibold flex items-center gap-0.5 group-hover:gap-1 transition-all">Review <ArrowRight className="w-3 h-3" /></span>
                   </div>
                 </Link>
               ))}
@@ -382,65 +276,52 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* All Recent Claims Table */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-          <div className="p-5 border-b border-slate-800 flex items-center justify-between">
+        {/* Recent claims table */}
+        <div className="card p-0 overflow-hidden">
+          <div className="p-5 border-b border-[#E5E7EB] flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">Recent Claims Inflow</h2>
-              <p className="text-xs text-slate-400">All recent policyholder accident damage submissions</p>
+              <h2 className="text-sm font-bold text-[#06244F]">Recent Claims</h2>
+              <p className="text-xs text-[#6B7280]">All recent policyholder damage submissions</p>
             </div>
-            <Link
-              to="/admin/claims"
-              className="text-xs font-semibold text-primary-400 hover:text-primary-300 flex items-center gap-1 transition-colors"
-            >
-              Open Full Review Queue <ArrowRight className="w-3.5 h-3.5" />
+            <Link to="/admin/claims" className="text-xs font-semibold text-[#1268E8] hover:text-[#0f58d4] flex items-center gap-1">
+              Full Review Queue <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="data-table">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 font-semibold uppercase tracking-wider">
-                  <th className="py-3 px-5">Claim #</th>
-                  <th className="py-3 px-5">Vehicle & Plate</th>
-                  <th className="py-3 px-5">Damage Area</th>
-                  <th className="py-3 px-5">Status</th>
-                  <th className="py-3 px-5">AI Verdict</th>
-                  <th className="py-3 px-5">Est. Cost</th>
-                  <th className="py-3 px-5">Date</th>
-                  <th className="py-3 px-5 text-right">Officer Review</th>
+                <tr>
+                  <th>Claim #</th>
+                  <th>Vehicle</th>
+                  <th>Damage Area</th>
+                  <th>Status</th>
+                  <th>AI Verdict</th>
+                  <th>Est. Cost</th>
+                  <th>Date</th>
+                  <th className="text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
-                {recentClaims.map((claim) => (
-                  <tr key={claim.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="py-3.5 px-5 font-mono font-bold text-primary-400">
-                      {claim.claim_number}
+              <tbody>
+                {recentClaims.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-10 text-[#9CA3AF] text-sm">
+                      No claims found. Claims will appear here once submitted.
                     </td>
-                    <td className="py-3.5 px-5">
-                      <div className="font-semibold text-white">{claim.vehicle_model}</div>
-                      <div className="text-[11px] font-mono text-slate-400">{claim.vehicle_plate}</div>
+                  </tr>
+                ) : recentClaims.map((claim) => (
+                  <tr key={claim.id}>
+                    <td className="font-mono font-bold text-[#1268E8]">{claim.claim_number}</td>
+                    <td>
+                      <div className="font-semibold text-[#06244F] text-xs">{claim.vehicle_model}</div>
+                      <div className="font-mono text-[11px] text-[#6B7280]">{claim.vehicle_plate}</div>
                     </td>
-                    <td className="py-3.5 px-5 font-medium text-slate-200">
-                      {claim.claimed_part}
-                    </td>
-                    <td className="py-3.5 px-5">
-                      <StatusBadge status={claim.status} />
-                    </td>
-                    <td className="py-3.5 px-5">
-                      <VerdictBadge verdict={claim.verdict} matchScore={claim.match_score} />
-                    </td>
-                    <td className="py-3.5 px-5">
-                      <CostBadge costMin={claim.estimated_cost_min} costMax={claim.estimated_cost_max} />
-                    </td>
-                    <td className="py-3.5 px-5 font-mono text-[11px] text-slate-400">
-                      {new Date(claim.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="py-3.5 px-5 text-right">
-                      <Link
-                        to={`/admin/claims/${claim.id}`}
-                        className="inline-flex items-center gap-1 text-primary-400 hover:text-primary-300 font-semibold transition-colors"
-                      >
+                    <td className="font-medium text-[#374151]">{claim.claimed_part}</td>
+                    <td><StatusBadge status={claim.status} /></td>
+                    <td><VerdictBadge verdict={claim.verdict} matchScore={claim.match_score} /></td>
+                    <td><CostBadge costMin={claim.estimated_cost_min} costMax={claim.estimated_cost_max} /></td>
+                    <td className="font-mono text-[11px] text-[#6B7280]">{new Date(claim.created_at).toLocaleDateString('en-IN')}</td>
+                    <td className="text-right">
+                      <Link to={`/admin/claims/${claim.id}`} className="text-xs font-semibold text-[#1268E8] hover:text-[#0f58d4] flex items-center gap-1 justify-end">
                         Inspect <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </td>

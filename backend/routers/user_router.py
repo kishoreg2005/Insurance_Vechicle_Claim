@@ -282,7 +282,16 @@ def get_user_policy(
     current_user: SimpleNamespace = Depends(get_current_user)
 ):
     policies = firebase_db.get_collection("policies")
-    user_policies = [p for p in policies if str(p.get("user_id")) == str(current_user.id)]
+    user_uid = str(getattr(current_user, "uid", "") or "")
+    user_id_str = str(getattr(current_user, "id", "") or "")
+    user_email = str(getattr(current_user, "email", "") or "").lower()
+
+    user_policies = [
+        p for p in policies
+        if (user_id_str and str(p.get("user_id")) == user_id_str)
+        or (user_uid and str(p.get("user_id")) == user_uid)
+        or (user_email and str(p.get("user_email", "")).lower() == user_email)
+    ]
     
     active_policy = next((p for p in user_policies if p.get("status") == "Active"), None)
     if not active_policy and user_policies:
@@ -297,14 +306,20 @@ def get_user_policy(
             "id": active_policy.get("id"),
             "policy_number": active_policy.get("policy_number", "POL-2026-001"),
             "vehicle_type": active_policy.get("vehicle_type", "Passenger Sedan"),
-            "vehicle_model": active_policy.get("vehicle_model", "Hyundai i20"),
-            "vehicle_plate": active_policy.get("vehicle_plate", "KA-01-MJ-8821"),
+            "vehicle_model": active_policy.get("vehicle_model", "Vehicle"),
+            "vehicle_plate": active_policy.get("vehicle_plate", "N/A"),
+            "vehicle_year": active_policy.get("vehicle_year", "2024"),
+            "chassis_number": active_policy.get("chassis_number", "N/A"),
+            "fuel_type": active_policy.get("fuel_type", "Petrol"),
             "coverage_type": active_policy.get("coverage_type", "Comprehensive"),
+            "coverage_amount": active_policy.get("coverage_amount", "₹ 8,50,000"),
             "annual_premium": active_policy.get("annual_premium", 18500),
             "monthly_instalment": active_policy.get("monthly_instalment", 1650),
             "start_date": active_policy.get("start_date"),
             "end_date": active_policy.get("end_date"),
-            "status": active_policy.get("status", "Active")
+            "status": active_policy.get("status", "Active"),
+            "user_name": active_policy.get("user_name", getattr(current_user, "name", "Policyholder")),
+            "user_email": active_policy.get("user_email", getattr(current_user, "email", ""))
         }
     }
 
